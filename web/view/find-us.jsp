@@ -4,6 +4,7 @@
     Author     : hoang
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en-US" class="">
@@ -32,6 +33,7 @@
                                     <div class="section">
                                         <div class="content">
                                             <div class="row-fluid map-page-info">
+                                                <c:set var="info" value="${requestScope.contact}" />
                                                 <div class="span6">
                                                     <div class="item">
                                                         <div class="heading">
@@ -39,7 +41,9 @@
                                                         </div>
                                                         <div class="content">
                                                             <div class="country">
-                                                                <p>The Sushi Restaurant<br>New York, NY, USA</p>
+                                                                <p>${info.name}
+                                                                    <br>${info.address}
+                                                                </p>
                                                             </div>
 
                                                             <div class="row-fluid">
@@ -47,7 +51,7 @@
                                                                     Tel:
                                                                 </div>    
                                                                 <div class="span10">
-                                                                    12345
+                                                                    ${info.tel}
                                                                 </div>    
                                                             </div>
                                                             <div class="row-fluid">
@@ -55,7 +59,7 @@
                                                                     Email:
                                                                 </div>    
                                                                 <div class="span10">
-                                                                    your-email@your-email.com
+                                                                    ${info.email}
                                                                 </div>    
                                                             </div>
                                                         </div>
@@ -67,7 +71,7 @@
                                                             <h4 class="item-title map-page-title">Opening hours:</h4>
                                                         </div>
                                                         <div class="content">
-                                                            <p>Monday Closed<br>Tuesday 12 - 22<br>Wednesday 12 - 22<br>Thursday 12 - 22<br>Friday 11 - 23<br>Saturday 11 - 23<br>Sunday 11 - 22</p>
+                                                            <p>${info.openHours}</p>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -4,6 +4,7 @@
     Author     : hoang
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en-US" class="">
@@ -28,65 +29,56 @@
                                 </div>
 
                                 <div class="content">
-                                    <div class="section">
-                                        <div class="content">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Menu 1</th>
-                                                        <th class="align-right">Price</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Claritas est etiam processus</td>
-                                                        <td class="align-right">€15.00</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+                                    <c:forEach items="${requestScope.listObj}" var="listObj">                                                                            
+                                        <div class="section">
+                                            <div class="content">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>${listObj.name}</th>
+                                                            <th class="align-right">Price</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>${listObj.shortDesc}</td>
+                                                            <td class="align-right">€${listObj.price}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <p>${listObj.detailDesc}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="section">
-                                        <div class="content">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Menu 2</th>
-                                                        <th class="align-right">Price</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Duis autem vel eum iriure dolor.</td>
-                                                        <td class="align-right">€20.00</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
-                                        </div>
-                                    </div>
-                                    <div class="section">
-                                        <div class="content">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Menu 3</th>
-                                                        <th class="align-right">Price</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Eodem modo typi, qui nunc nobis videntur.</td>
-                                                        <td class="align-right">€25.00</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
-                                        </div>
-                                    </div>
+                                   </c:forEach>
+                                    
                                 </div>
                             </div>
+                            <!-- PAGING START -->
+                            <div class="pagination">
+                                <%  int numOfLink = 5;// số lượng page muốn hiển thị
+                                    int pageNum = Integer.parseInt(request.getAttribute("page") + "");
+                                    int perpage = Integer.parseInt(request.getAttribute("perpage") + "");
+
+                                    int size = Integer.parseInt(request.getAttribute("size") + "");
+                                    int totalPage = (size / perpage) + ((size % perpage == 0 && (pageNum) != 0) ? 0 : 1);//tổng số trang tối đa của list
+                                    int maxPage = (totalPage < numOfLink) ? totalPage : numOfLink;//số page hiển thị tối đa
+                                    int startPage = ((pageNum - (maxPage / 2)) > 0) ? (pageNum - (maxPage / 2)) : 1;
+                                    int endPage = ((startPage + maxPage - 1) < totalPage) ? (startPage + maxPage - 1) : totalPage;
+                                    if ((endPage - startPage) < totalPage && maxPage <= totalPage) {
+                                        startPage = endPage - (numOfLink - 1);
+                                    }
+                                    if (startPage <= 0) {
+                                        startPage = 1;
+                                    }
+                                    if (maxPage > 1) {  %>
+                                        <a href="menu?page=1">&laquo;</a>
+                                        <%  for (int i = startPage; i <= endPage; i++) {    %>
+                                            <a class="<%=((pageNum == i) ? "active" : "")%>" href="menu?page=<%=i%>"><%=i%></a>
+                                        <%  } %>
+                                        <a href="menu?page=<%=(totalPage)%>">&raquo;</a>
+                                    <%  }   %>
+                            </div>
+                            <!-- PAGING END -->
                         </div>
                         <%@include file="common/social-network.jsp" %>
                     </div>        

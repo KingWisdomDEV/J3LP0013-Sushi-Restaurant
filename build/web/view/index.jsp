@@ -4,6 +4,7 @@
     Author     : hoang
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en-US" class="">
@@ -27,27 +28,29 @@
                                     <div class="section article">
                                         <div class="content">
                                             <div class="img-simple span12 ">
-                                                <div class="image">
-                                                    <a rel="nofollow" data-ss="imagemodal" data-href="http://cdn.simplesite.com/i/eb/15/282319406464701931/i282319414620330848._szw1280h1280_.jpg"><img src="/sushi-king.com/view/image/home1.jpg"></a>
+                                                <div class="image " >
+                                                    <a rel="nofollow" data-ss="imagemodal" data-href="http://cdn.simplesite.com/i/eb/15/282319406464701931/i282319414620330848._szw1280h1280_.jpg">
+                                                        <img src="/sushi-king.com/view/image/home1.jpg">
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="section article">
-                                        <div class="heading">
-                                            <h3>24 types of sushi rolls</h3>
-                                        </div>
+                                    <c:forEach items="${requestScope.listObj}" var="article">
+                                        <div class="section article">
+                                            <div class="heading">
+                                                <h3>${article.title}</h3>
+                                            </div>
 
-                                        <div class="content">
-                                            <div class="img-simple span6 pull-left">
-                                                <div class="image">
-                                                    <a rel="nofollow" data-ss="imagemodal" data-href="http://cdn.simplesite.com/i/eb/15/282319406464701931/i282319414620340695._szw1280h1280_.jpg"><img src="/sushi-king.com/view/image/home2.jpg"></a>
+                                            <div class="content">
+                                                <div class="img-simple span6 pull-left">
+                                                    <div class="image">
+                                                        <a rel="nofollow" data-ss="imagemodal" data-href="http://cdn.simplesite.com/i/eb/15/282319406464701931/i282319414620340695._szw1280h1280_.jpg"><img src="${article.image}"></a>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <p><span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip
-                                                    ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue
-                                                    duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.</span></p>    </div>
-                                    </div>
+                                                <p><span>${article.description}</span></p>    </div>
+                                        </div>
+                                    </c:forEach>
                                 </div>
                             </div>
                         </div>

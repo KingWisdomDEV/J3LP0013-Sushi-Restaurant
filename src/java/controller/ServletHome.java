@@ -1,6 +1,13 @@
 package controller;
 
+import dao.IHome;
+import dao.ISocialNetwork;
+import dao.impl.HomeDAO;
+import dao.impl.SocialNetworkDAO;
+import entity.Home;
+import entity.SocialNetwork;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,8 +32,19 @@ public class ServletHome extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        request.getRequestDispatcher("view/index.jsp").forward(request, response);
+        try {
+            IHome db = new HomeDAO();
+            List<Home> list = db.getAll();
+            ISocialNetwork dbSocial = new SocialNetworkDAO();
+            List<SocialNetwork> listSocial = dbSocial.getAll();
+            
+            request.setAttribute("listObj", list);
+            request.setAttribute("listSocialObj", listSocial);
+            request.getRequestDispatcher("view/index.jsp").forward(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("error", ex);
+            request.getRequestDispatcher("view/error.jsp").forward(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
