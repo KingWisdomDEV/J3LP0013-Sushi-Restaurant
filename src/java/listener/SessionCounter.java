@@ -1,3 +1,12 @@
+/*
+ *Copyright(C) 2021, King Wisdom
+ * J3LP0013
+ * The Sushi Restaurant
+ *
+ * Record of change:
+ * DATE                       Version             AUTHOR                       DESCRIPTION
+ * 20-1-2021                    1.0            King Wisdom                  First Implement
+ */
 package listener;
 
 import dao.impl.ViewDAO;
@@ -9,11 +18,18 @@ import javax.servlet.http.*;
  * is currently using and has ever used in its life cycle.
  */
 /**
+ * Lớp này có các phương thức khi Session được tạo hoặc bị ngắt
+ * Bugs: Chưa xuất hiện
  *
- * @author hoang
+ * @author King Wisdom
  */
 public class SessionCounter implements HttpSessionListener {
 
+    /**
+     * Cập nhật số lượng lượt xem và tạo Session đếm lượt xem theo format
+     *
+     * @param event khi Session được tạo mới
+     */
     @Override
     public void sessionCreated(HttpSessionEvent event) {
         IView dbView = new ViewDAO();

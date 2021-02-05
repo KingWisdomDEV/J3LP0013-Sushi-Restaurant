@@ -1,3 +1,12 @@
+/*
+ *Copyright(C) 2021, King Wisdom
+ * J3LP0013
+ * The Sushi Restaurant
+ *
+ * Record of change:
+ * DATE                       Version             AUTHOR                       DESCRIPTION
+ * 20-1-2021                    1.0            King Wisdom                  First Implement
+ */
 package controller;
 
 import dao.IContact;
@@ -7,7 +16,6 @@ import dao.impl.SocialNetworkDAO;
 import entity.Contact;
 import entity.SocialNetwork;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,8 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Lớp này có các phương thức thực hiện nhận yêu cầu của từ trang /find-us để
+ * phản hồi dữ liệu sang View.<p>
+ * Bugs: Chưa xuất hiện
  *
- * @author hoang
+ * @author King Wisdom
  */
 @WebServlet(name = "ServletFindUs", urlPatterns = {"/find-us"})
 public class ServletFindUs extends HttpServlet {
@@ -32,23 +43,20 @@ public class ServletFindUs extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            IContact db = new ContactDAO();
-            Contact contact = db.getInfo();
-            ISocialNetwork dbSocial = new SocialNetworkDAO();
-            List<SocialNetwork> listSocial = dbSocial.getAll();
-            
-            request.setAttribute("contact", contact);
-            request.setAttribute("listSocialObj", listSocial);
-            request.getRequestDispatcher("view/find-us.jsp").forward(request, response);
-        } catch (Exception ex) {
-            request.setAttribute("error", ex);
-            request.getRequestDispatcher("view/error.jsp").forward(request, response);
-        }
+            throws ServletException, IOException, Exception {
+        // Get Object Contact from Database
+        IContact db = new ContactDAO();
+        Contact contact = db.getInfo();
+        // Get List<SocialNetwork> from Database
+        ISocialNetwork dbSocial = new SocialNetworkDAO();
+        List<SocialNetwork> listSocial = dbSocial.getAll();
+
+        // Pass data to View
+        request.setAttribute("contact", contact);
+        request.setAttribute("listSocialObj", listSocial);
+        request.getRequestDispatcher("view/find-us.jsp").forward(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -60,7 +68,12 @@ public class ServletFindUs extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("error", ex);
+            request.getRequestDispatcher("view/error.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -74,7 +87,12 @@ public class ServletFindUs extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("error", ex);
+            request.getRequestDispatcher("view/error.jsp").forward(request, response);
+        }
     }
 
     /**

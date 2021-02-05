@@ -1,3 +1,12 @@
+/*
+ *Copyright(C) 2021, King Wisdom
+ * J3LP0013
+ * The Sushi Restaurant
+ *
+ * Record of change:
+ * DATE                       Version             AUTHOR                       DESCRIPTION
+ * 20-1-2021                    1.0            King Wisdom                  First Implement
+ */
 package filter;
 
 import java.io.IOException;
@@ -14,8 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Lớp này có các phương thức thực hiện kiểm tra yêu cầu người dùng từ Router trước và sau khi chuyển trang
+ * Bugs: Chưa xuất hiện
  *
- * @author hoang
+ * @author King Wisdom
  */
 public class RouterFilter implements Filter {
     
@@ -29,6 +40,10 @@ public class RouterFilter implements Filter {
     public RouterFilter() {
     }    
     
+    /**
+     * Thực hiện kiểm tra đường truyền trước khi chuyển trang
+     *
+     */
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -38,36 +53,12 @@ public class RouterFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         
-        String currentUrl = req.getServletPath();
+        String currentUrl = req.getServletPath(); // đường truyền url người dùng vừa nhập
+        // Nếu url chứa các ".jsp" thì chuyển về trang chủ
         if(currentUrl.contains(".jsp")){
             res.sendRedirect("/sushi-king.com/home");
         }
     }    
-    
-    private void doAfterProcessing(ServletRequest request, ServletResponse response)
-            throws IOException, ServletException {
-        if (debug) {
-            log("RouterFilter:DoAfterProcessing");
-        }
-
-        // Write code here to process the request and/or response after
-        // the rest of the filter chain is invoked.
-        // For example, a logging filter might log the attributes on the
-        // request object after the request has been processed. 
-        /*
-	for (Enumeration en = request.getAttributeNames(); en.hasMoreElements(); ) {
-	    String name = (String)en.nextElement();
-	    Object value = request.getAttribute(name);
-	    log("attribute: " + name + "=" + value.toString());
-
-	}
-         */
-        // For example, a filter might append something to the response.
-        /*
-	PrintWriter respOut = new PrintWriter(response.getWriter());
-	respOut.println("<P><B>This has been appended by an intrusive filter.</B>");
-         */
-    }
 
     /**
      *
@@ -99,8 +90,6 @@ public class RouterFilter implements Filter {
             t.printStackTrace();
         }
         
-        doAfterProcessing(request, response);
-
         // If there was a problem, we want to rethrow it if it is
         // a known type, otherwise log it.
         if (problem != null) {

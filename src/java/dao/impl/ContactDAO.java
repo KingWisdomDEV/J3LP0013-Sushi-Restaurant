@@ -14,14 +14,12 @@ import entity.Contact;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.SQLException;
 
 /**
- * Lớp này có các phương thức thực hiện truy vấn dữ liệu từ bảng Contact Các phương
- * thức sẽ trả về một đối tượng của lớp <code>java.lang.Exception</code> khi có
- * bất cứ lỗi nào xảy ra trong quá trình truy vấn
- * <p>
+ * Lớp này có các phương thức thực hiện truy vấn dữ liệu từ bảng Contact Các
+ * phương thức sẽ trả về một đối tượng của lớp <code>java.lang.Exception</code>
+ * khi có bất cứ lỗi nào xảy ra trong quá trình truy vấn<p>
  * Bugs: Chưa xuất hiện
  *
  * @author King Wisdom
@@ -30,10 +28,11 @@ public class ContactDAO extends DBContext implements IContact {
 
     /**
      * Lấy thông tin tất cả các record trong bảng Contact Kết quả chứa danh sách
-     * các đối tượng <code> model.Contact </code> có id, title, description, image
+     * các đối tượng <code> entity.Contact</code> có id, name, address, tel,
+     * email, openHours
      *
-     * @return danh sách các đối tượng <code> Contact </code>. Nó là một đối tượng <code> java.util.List
-     * </code>
+     * @return danh sách các đối tượng <code>Contact</code>. Nó là một đối
+     * tượng<code>java.util.List</code>
      * @throws java.lang.Exception
      */
     @Override
@@ -55,7 +54,7 @@ public class ContactDAO extends DBContext implements IContact {
                 c.setOpenHours(rs.getString(6));
                 return c;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw e;
         } finally {
             closeRS(rs);
@@ -63,11 +62,6 @@ public class ContactDAO extends DBContext implements IContact {
             closeCon(con);
         }
         return null;
-    }
-
-    public static void main(String[] args) throws Exception {
-        ContactDAO c = new ContactDAO();
-        System.out.println(c.getInfo().getOpenHours());
     }
 
 }

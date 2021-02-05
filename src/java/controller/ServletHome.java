@@ -1,3 +1,12 @@
+/*
+ *Copyright(C) 2021, King Wisdom
+ * J3LP0013
+ * The Sushi Restaurant
+ *
+ * Record of change:
+ * DATE                       Version             AUTHOR                       DESCRIPTION
+ * 20-1-2021                    1.0            King Wisdom                  First Implement
+ */
 package controller;
 
 import dao.IHome;
@@ -15,8 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Lớp này có các phương thức thực hiện nhận yêu cầu của từ trang /home để phản
+ * hồi dữ liệu sang View.<p>
+ * Bugs: Chưa xuất hiện
  *
- * @author hoang
+ * @author King Wisdom
  */
 @WebServlet(name = "ServletHome", urlPatterns = {"/home"})
 public class ServletHome extends HttpServlet {
@@ -31,20 +43,18 @@ public class ServletHome extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            IHome db = new HomeDAO();
-            List<Home> list = db.getAll();
-            ISocialNetwork dbSocial = new SocialNetworkDAO();
-            List<SocialNetwork> listSocial = dbSocial.getAll();
-            
-            request.setAttribute("listObj", list);
-            request.setAttribute("listSocialObj", listSocial);
-            request.getRequestDispatcher("view/index.jsp").forward(request, response);
-        } catch (Exception ex) {
-            request.setAttribute("error", ex);
-            request.getRequestDispatcher("view/error.jsp").forward(request, response);
-        }
+            throws ServletException, IOException, Exception {
+        // Get List<Home> from Database    
+        IHome db = new HomeDAO();
+        List<Home> list = db.getAll();
+        // Get List<SocialNetwork> from Database
+        ISocialNetwork dbSocial = new SocialNetworkDAO();
+        List<SocialNetwork> listSocial = dbSocial.getAll();
+
+        // Pass data to View
+        request.setAttribute("listObj", list);
+        request.setAttribute("listSocialObj", listSocial);
+        request.getRequestDispatcher("view/index.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -59,7 +69,12 @@ public class ServletHome extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("error", ex);
+            request.getRequestDispatcher("view/error.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -73,7 +88,12 @@ public class ServletHome extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("error", ex);
+            request.getRequestDispatcher("view/error.jsp").forward(request, response);
+        }
     }
 
     /**

@@ -14,14 +14,14 @@ import entity.Home;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Lớp này có các phương thức thực hiện truy vấn dữ liệu từ bảng Home Các phương
  * thức sẽ trả về một đối tượng của lớp <code>java.lang.Exception</code> khi có
- * bất cứ lỗi nào xảy ra trong quá trình truy vấn
- * <p>
+ * bất cứ lỗi nào xảy ra trong quá trình truy vấn<p>
  * Bugs: Chưa xuất hiện
  *
  * @author King Wisdom
@@ -29,18 +29,8 @@ import java.util.List;
 public class HomeDAO extends DBContext implements IHome {
 
     /**
-     * (Viết mô tả ngắn gọn về phương pháp này tại đây. Nếu cần, các đoạn bổ
-     * sung phải được đặt trước bằng
-     * <p>
-     * , thẻ html cho một đoạn mới.)
-     *
-     * @param (tên tham số) (Mô tả tham số đầu tiên tại đây)
-     * @param (tên tham số) (Làm tương tự cho từng tham số bổ sung)
-     * @return (mô tả giá trị trả về)
-     */
-    /**
      * Lấy thông tin tất cả các record trong bảng Home Kết quả chứa danh sách
-     * các đối tượng <code> model.Home </code> có id, title, description, image
+     * các đối tượng <code> entity.Home </code> có id, title, image, description
      *
      * @return danh sách các đối tượng <code> Home </code>. Nó là một đối tượng <code> java.util.List
      * </code>
@@ -64,7 +54,7 @@ public class HomeDAO extends DBContext implements IHome {
                 c.setDescription(rs.getString(4));
                 ls.add(c);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw e;
         } finally {
             closeRS(rs);
@@ -72,11 +62,6 @@ public class HomeDAO extends DBContext implements IHome {
             closeCon(con);
         }
         return ls;
-    }
-
-    public static void main(String[] args) throws Exception {
-        HomeDAO c = new HomeDAO();
-        System.out.println(c.getAll().size());
     }
 
 }

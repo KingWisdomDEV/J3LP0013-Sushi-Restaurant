@@ -1,3 +1,12 @@
+/*
+ *Copyright(C) 2021, King Wisdom
+ * J3LP0013
+ * The Sushi Restaurant
+ *
+ * Record of change:
+ * DATE                       Version             AUTHOR                       DESCRIPTION
+ * 20-1-2021                    1.0            King Wisdom                  First Implement
+ */
 package controller;
 
 import dao.IMenu;
@@ -7,7 +16,6 @@ import dao.impl.SocialNetworkDAO;
 import entity.Menu;
 import entity.SocialNetwork;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,8 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Lớp này có các phương thức thực hiện nhận yêu cầu của từ trang /menu để phản
+ * hồi dữ liệu sang View.<p>
+ * Bugs: Chưa xuất hiện
  *
- * @author hoang
+ * @author King Wisdom
  */
 @WebServlet(name = "ServletMenu", urlPatterns = {"/menu"})
 public class ServletMenu extends HttpServlet {
@@ -32,42 +43,50 @@ public class ServletMenu extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            IMenu db = new MenuDAO();
-            List<Menu> list = db.getAll();
-            ISocialNetwork dbSocial = new SocialNetworkDAO();
-            List<SocialNetwork> listSocial = dbSocial.getAll();
-            
-            // PAGING START
-            int size = list.size();
-            String spage = request.getParameter("page");
-            int page = (spage != null && !spage.equals("")) ? Integer.parseInt(spage) : 1;
-            int perpage = 2;
-            int totalPage = (size / perpage) + ((size % perpage == 0 && (page) != 0) ? 0 : 1);
-            if ((page > totalPage && totalPage != 0) || page < 0) {
-                response.sendRedirect("../sushi-king.com/menu");
-            } else {
-                int start = page * perpage - perpage;
-                int end = ((start + perpage) < list.size()) ? (start + perpage) : list.size();
-                
-                // PAGING END
-                List<Menu> data = db.getAllByPage(list, start, end);
-                request.setAttribute("page", page);
-                request.setAttribute("size", size);
-                request.setAttribute("perpage", perpage);
-            
-                request.setAttribute("listObj", data);
-                request.setAttribute("listSocialObj", listSocial);
-                request.getRequestDispatcher("view/menu.jsp").forward(request, response);
+            throws ServletException, IOException, Exception {
+        // Get List<Menu> from Database
+        IMenu db = new MenuDAO();
+        List<Menu> list = db.getAll();
+        // Get List<SocialNetwork> from Database
+        ISocialNetwork dbSocial = new SocialNetworkDAO();
+        List<SocialNetwork> listSocial = dbSocial.getAll();
+
+        // PAGING START
+        int size = list.size(); //số lượng bản ghi trong database
+        String spage = request.getParameter("page");
+        int pageNum = (spage != null && spage.trim().matches("^[0-9]+$")) ? Integer.parseInt(spage) : 1;
+        int perpage = 3;    // số lượng bản ghi hiển thị tối đa trong 1 trang
+        int totalPage = (size / perpage) + ((size % perpage == 0 && (pageNum) != 0) ? 0 : 1);//tổng số trang tối đa của list
+        if ((pageNum > totalPage && totalPage != 0) || pageNum < 0) {
+            response.sendRedirect("../sushi-king.com/menu");
+        } else {
+            int start = pageNum * perpage - perpage;// vị trí bản ghi đầu tiên hiển thị ở trang trong database
+            int end = ((start + perpage) < list.size()) ? (start + perpage) : list.size();
+            int numOfLink = 5;// số lượng link page muốn hiển thị ở view
+            int maxPage = (totalPage < numOfLink) ? totalPage : numOfLink;//số page hiển thị tối đa
+            int startPage = ((pageNum - (maxPage / 2)) > 0) ? (pageNum - (maxPage / 2)) : 1;
+            int endPage = ((startPage + maxPage - 1) < totalPage) ? (startPage + maxPage - 1) : totalPage;
+            if ((endPage - startPage) < totalPage && maxPage <= totalPage) {
+                startPage = endPage - (numOfLink - 1);
             }
-        } catch (Exception ex) {
-            request.setAttribute("error", ex);
-            request.getRequestDispatcher("view/error.jsp").forward(request, response);
+            if (startPage <= 0) {
+                startPage = 1;
+            }
+            if (maxPage > 1) {
+                request.setAttribute("startPage", startPage);
+                request.setAttribute("endPage", endPage);
+                request.setAttribute("totalPage", totalPage);
+            }
+            // PAGING END
+
+            // Pass data to View
+            List<Menu> data = db.getAllByPage(list, start, end);
+            request.setAttribute("listObj", data);
+            request.setAttribute("listSocialObj", listSocial);
+            request.getRequestDispatcher("view/menu.jsp").forward(request, response);
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -79,7 +98,12 @@ public class ServletMenu extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("error", ex);
+            request.getRequestDispatcher("/view/error.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -93,7 +117,12 @@ public class ServletMenu extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("error", ex);
+            request.getRequestDispatcher("/view/error.jsp").forward(request, response);
+        }
     }
 
     /**

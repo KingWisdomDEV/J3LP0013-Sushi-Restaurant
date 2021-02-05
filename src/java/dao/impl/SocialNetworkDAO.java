@@ -14,6 +14,7 @@ import entity.SocialNetwork;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class SocialNetworkDAO extends DBContext implements ISocialNetwork {
 
     /**
      * Lấy thông tin tất cả các record trong bảng SocialNetwork Kết quả chứa danh sách
-     * các đối tượng <code> model.SocialNetwork </code> có id, title, description, image
+     * các đối tượng <code> entity.SocialNetwork </code> có id, name, icon, link
      *
      * @return danh sách các đối tượng <code> SocialNetwork </code>. Nó là một đối tượng <code> java.util.List
      * </code>
@@ -54,7 +55,7 @@ public class SocialNetworkDAO extends DBContext implements ISocialNetwork {
                 c.setLink(rs.getString(4));
                 ls.add(c);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw e;
         } finally {
             closeRS(rs);
@@ -62,11 +63,6 @@ public class SocialNetworkDAO extends DBContext implements ISocialNetwork {
             closeCon(con);
         }
         return ls;
-    }
-
-    public static void main(String[] args) throws Exception {
-        SocialNetworkDAO c = new SocialNetworkDAO();
-        System.out.println(c.getAll().size());
     }
 
 }

@@ -54,31 +54,21 @@
                                 </div>
                             </div>
                             <!-- PAGING START -->
-                            <div class="pagination">
-                                <%  int numOfLink = 5;// số lượng page muốn hiển thị
-                                    int pageNum = Integer.parseInt(request.getAttribute("page") + "");
-                                    int perpage = Integer.parseInt(request.getAttribute("perpage") + "");
-
-                                    int size = Integer.parseInt(request.getAttribute("size") + "");
-                                    int totalPage = (size / perpage) + ((size % perpage == 0 && (pageNum) != 0) ? 0 : 1);//tổng số trang tối đa của list
-                                    int maxPage = (totalPage < numOfLink) ? totalPage : numOfLink;//số page hiển thị tối đa
-                                    int startPage = ((pageNum - (maxPage / 2)) > 0) ? (pageNum - (maxPage / 2)) : 1;
-                                    int endPage = ((startPage + maxPage - 1) < totalPage) ? (startPage + maxPage - 1) : totalPage;
-                                    if ((endPage - startPage) < totalPage && maxPage <= totalPage) {
-                                        startPage = endPage - (numOfLink - 1);
-                                    }
-                                    if (startPage <= 0) {
-                                        startPage = 1;
-                                    }
-                                    if (maxPage > 1) {  %>
+                                <div class="pagination" style="margin-top: 30px">
+                                    <c:set var="pageNum" value="${(param.page != null && param.page.matches('^[0-9+]$')) ? param.page : 1}"/>
+                                    <c:set var="startPage" value="${requestScope.startPage}"/>
+                                    <c:set var="endPage" value="${requestScope.endPage}"/>
+                                    <c:set var="totalPage" value="${requestScope.totalPage}"/>
+                                    <!--Nếu số bản ghi không hiển thị hết trong cùng 1 trang thì hiển thị paging-->
+                                    <c:if test="${totalPage gt 1}">
                                         <a href="menu?page=1">&laquo;</a>
-                                        <%  for (int i = startPage; i <= endPage; i++) {    %>
-                                            <a class="<%=((pageNum == i) ? "active" : "")%>" href="menu?page=<%=i%>"><%=i%></a>
-                                        <%  } %>
-                                        <a href="menu?page=<%=(totalPage)%>">&raquo;</a>
-                                    <%  }   %>
-                            </div>
-                            <!-- PAGING END -->
+                                        <c:forEach begin="${startPage}" end="${endPage}" step="1" var="i">
+                                            <a class="${(pageNum eq i) ? "active" : ""}" href="menu?page=${i}">${i}</a>
+                                        </c:forEach>
+                                        <a href="menu?page=${totalPage}">&raquo;</a>
+                                    </c:if>
+                                </div>
+                                <!-- PAGING END -->
                         </div>
                         <%@include file="common/social-network.jsp" %>
                     </div>        

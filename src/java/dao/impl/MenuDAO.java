@@ -14,6 +14,7 @@ import entity.Menu;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +31,10 @@ public class MenuDAO extends DBContext implements IMenu {
 
     /**
      * Lấy thông tin tất cả các record trong bảng Menu Kết quả chứa danh sách
-     * các đối tượng <code> model.Menu </code> có id, title, description, image
+     * các đối tượng <code>entity.Menu</code> có id, name, price, shortDesc,
+     * detailDesc
      *
-     * @return danh sách các đối tượng <code> Menu </code>. Nó là một đối tượng <code> java.util.List
+     * @return danh sách các đối tượng <code>Menu</code>. Nó là một đối tượng <code> java.util.List
      * </code>
      * @throws java.lang.Exception
      */
@@ -55,7 +57,7 @@ public class MenuDAO extends DBContext implements IMenu {
                 c.setDetailDesc(rs.getString(5));
                 ls.add(c);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw e;
         } finally {
             closeRS(rs);
@@ -65,13 +67,20 @@ public class MenuDAO extends DBContext implements IMenu {
         return ls;
     }
 
-    public static void main(String[] args) throws Exception {
-        MenuDAO c = new MenuDAO();
-        System.out.println(c.getAll().size());
-    }
-
+    /**
+     * Lấy thông tin tất cả các record trong bảng Menu có vị trí từ start đến
+     * end trong List.Kết quả chứa danh sách các đối tượng <code> entity.Menu
+     * </code> có id, title, short_desc, link
+     *
+     * @param list danh sách đối tượng <code>entity.Menu</code>. Nó là một đối tượng
+     * <code>java.util.List</code>
+     * @param start vị trí bắt đầu trong List
+     * @param end vị trí kết thúc trong List
+     * @return danh sách các đối tượng <code>entity.Menu</code>. Nó là một đối tượng
+     * <code>java.util.List</code>
+     */
     @Override
-    public List<Menu> getAllByPage(List<Menu> list, int start, int end) throws Exception {
+    public List<Menu> getAllByPage(List<Menu> list, int start, int end) {
         List<Menu> ls = new ArrayList<>();
         for (int i = start; i < end; i++) {
             ls.add(list.get(i));
